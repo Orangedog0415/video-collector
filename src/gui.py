@@ -80,6 +80,10 @@ class App:
         ttk.Spinbox(r1, from_=0, to=16, width=4, textvariable=self.v_workers).pack(side="left")
         self.v_audio = tk.BooleanVar(value=False)
         ttk.Checkbutton(r1, text="仅音频", variable=self.v_audio).pack(side="left", padx=8)
+        self.v_autoup = tk.BooleanVar(
+            value=bool(self.cfg.get("auto_upload", {}).get("enabled")))
+        ttk.Checkbutton(r1, text="边下边传(传完删本地)",
+                        variable=self.v_autoup).pack(side="left", padx=4)
         ttk.Label(r1, text="轮循间隔(分)").pack(side="left", **pad)
         self.v_gap = tk.DoubleVar(value=0)
         ttk.Spinbox(r1, from_=0, to=720, increment=5, width=5,
@@ -289,6 +293,7 @@ class App:
         fp = self.eng.fail_file
         if fp.exists():
             fp.replace(fp.with_name("failed_prev.txt"))
+        self.cfg.setdefault("auto_upload", {})["enabled"] = bool(self.v_autoup.get())
         overrides = {"audio_only": True} if self.v_audio.get() else None
         args = dict(workers=int(self.v_workers.get() or 0),
                     round_gap=float(self.v_gap.get() or 0),

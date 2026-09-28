@@ -1,0 +1,56 @@
+{
+  "output_dir": "videos",
+  "state_dir": "state",
+  "sources_file": "sources/客家话_0928.xlsx",
+  "sites": {
+    "default": {
+      "proxy": "",
+      "cookies_from_browser": "",
+      "cookies_file": "",
+      "workers": 3,
+      "sleep": 5.0,
+      "frags": 4,
+      "max_height": 1080,
+      "audio_only": false,
+      "audio_format": "wav",
+      "subs": false,
+      "auto_subs": false,
+      "sub_langs": "zh.*,nan.*,hak.*,en.*",
+      "attempts": 3,
+      "throttle_kb": 50,
+      "rotate_clients": false
+    },
+    "youtube": {
+      "proxy": "",
+      "cookies_from_browser": "firefox",
+      "workers": 3,
+      "sleep": 5.0,
+      "rotate_clients": true
+    },
+    "bilibili": {
+      "proxy": "",
+      "workers": 2,
+      "sleep": 3,
+      "cookies_from_browser": "",
+      "cookies_file": ""
+    },
+    "douyin": {
+      "proxy": "",
+      "workers": 1,
+      "sleep": 8,
+      "cookies_from_browser": "firefox"
+    }
+  },
+  "server": {
+    "host": "124.128.251.63",
+    "port": 16022,
+    "user": "cjk",
+    "remote": "~/datasets/hakka_multi"
+  },
+  "auto_upload": {
+    "enabled": false,
+    "batch": 3,
+    "idle_seconds": 60,
+    "delete_local": true
+  }
+}

@@ -12,6 +12,7 @@ from pathlib import Path
 import core
 import sources as src_mod
 import yt_dlp
+from autoupload import Pipeline
 
 
 class Engine:
@@ -32,6 +33,7 @@ class Engine:
         self.deferred = []
         self.def_lock = threading.Lock()
         self.nojs_warned = False
+        self.pipeline = None          # 边下边传
         self.reload_state()
 
     def reload_state(self):
@@ -136,6 +138,8 @@ class Engine:
                     if t["id"] not in self.done:
                         core.append_line(self.done_file, t["id"])
                         self.done.add(t["id"])
+                    if self.pipeline:
+                        self.pipeline.submit(t)
                     self.on_status(t, "已完成", "100%")
                     self.on_log(f"完成 [{t['site']}] {tag} {t['title'][:32]}")
                     return "ok"
@@ -203,6 +207,10 @@ class Engine:
         done_n = 0
         rnd = 0
         total_n = len(todo)
+        self.pipeline = Pipeline(self.cfg, on_log=self.on_log)
+        self.pipeline.start()
+        if not self.pipeline.enabled:
+            self.pipeline = None
         self.on_log(f"开始下载 {total_n} 个")
         while todo and not self.stop_event.is_set():
             rnd += 1
@@ -252,6 +260,11 @@ class Engine:
                 end = time.time() + round_gap * 60
                 while time.time() < end and not self.stop_event.is_set():
                     time.sleep(0.5)
+        if self.pipeline:
+            if self.stop_event.is_set():
+                self.on_log("正在把已下好的文件传完 …")
+            self.pipeline.finish(wait=True)
+            self.pipeline = None
         self.on_log(f"{'已停止' if self.stop_event.is_set() else '全部结束'}："
                     f"共 {rnd} 轮，成功 {ok}，跳过 {skip}，失败 {fail}")
         self.on_progress(done=done_n, total=total_n, ok=ok, skip=skip, fail=fail,

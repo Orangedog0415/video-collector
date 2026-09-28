@@ -70,6 +70,19 @@ python src/uploader.py --delete --watch 300     # 边下边传，传完删本地
 python src/verify.py                            # 核对服务器有没有遗漏
 ```
 
+## 边下边传（省硬盘空间）
+
+开了之后，每下好几个视频就自动传到服务器、校验无误再删本地，本地始终只占几 GB。
+
+```bash
+python src/cli.py download --auto-upload          # 传完删本地
+python src/cli.py download --auto-upload --keep-local   # 传完保留
+```
+
+界面上勾「边下边传(传完删本地)」即可。默认攒够 3 个文件或满 60 秒传一次，
+可在 `config.json` 的 `auto_upload` 段调 `batch` / `idle_seconds` / `delete_local`。
+上传失败的文件会留在本地，事后跑 `uploader.py` 补传，不会丢。
+
 ## 断点续传
 
 - **视频级**：完成的记在 `state/done.txt`，重复运行自动跳过

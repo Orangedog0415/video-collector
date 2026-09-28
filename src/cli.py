@@ -36,12 +36,20 @@ def main():
     ap.add_argument("--only", default=None, help="只处理需求表的第几行，逗号分隔")
     ap.add_argument("--workers", type=int, default=0, help="覆盖站点默认并行数")
     ap.add_argument("--audio-only", action="store_true", help="只下音频")
+    ap.add_argument("--auto-upload", action="store_true",
+                    help="边下边传：每下好几个就传到服务器并删本地")
+    ap.add_argument("--keep-local", action="store_true",
+                    help="配合 --auto-upload：传完保留本地副本")
     ap.add_argument("--round-gap", type=float, default=0, help="轮次间隔(分钟)")
     ap.add_argument("--max-rounds", type=int, default=0, help="0=不限")
     ap.add_argument("--refresh", action="store_true", help="重新展开需求表")
     args = ap.parse_args()
 
     cfg = core.load_config(args.config)
+    if args.auto_upload:
+        cfg.setdefault("auto_upload", {})["enabled"] = True
+    if args.keep_local:
+        cfg.setdefault("auto_upload", {})["delete_local"] = False
     eng = Engine(cfg, on_log=log)
 
     name, path = core.find_js_runtime()
