@@ -12,7 +12,7 @@ videos/
 *.info.json
 
 # 本机配置与凭据
-# config.json
+config.json
 claudekey/
 *.pem
 cookies*.txt
