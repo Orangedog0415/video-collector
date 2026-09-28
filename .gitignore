@@ -1,0 +1,30 @@
+# 下载的数据，绝不进仓库
+videos/
+*.mp4
+*.webm
+*.mkv
+*.m4a
+*.wav
+*.flac
+*.part
+*.part-Frag*
+*.ytdl
+*.info.json
+
+# 本机配置与凭据
+config.json
+claudekey/
+*.pem
+cookies*.txt
+
+# 运行状态（进度账本，按需手动备份，不跟代码走）
+state/*
+!state/.gitkeep
+
+# 杂项
+__pycache__/
+*.pyc
+diag.txt
+*.log
+.vscode/
+.idea/
